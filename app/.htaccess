@@ -1,0 +1,18 @@
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+
+# Force HTTP for local development
+<IfModule mod_headers.c>
+Header always unset Strict-Transport-Security
+Header always unset Content-Security-Policy
+Header always set Strict-Transport-Security "max-age=0"
+Header always set Permissions-Policy "interest-cohort=()"
+</IfModule>
