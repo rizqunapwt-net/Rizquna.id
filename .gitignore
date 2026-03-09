@@ -1,0 +1,42 @@
+# ========================================
+# Rizquna.id - WordPress Docker Project
+# ========================================
+
+# Uploads (media files - too large for git, sync separately)
+app/wp-content/uploads/
+data/uploads/
+
+# Cache & temp
+app/wp-content/cache/
+app/wp-content/upgrade/
+app/wp-content/backup*/
+app/wp-content/wflogs/
+
+# SQL dumps (track for reference, but ignore large backups)
+data/db/*.sql
+!data/db/u9443309_wp827.sql
+
+# Local volumes data
+db_data/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+app/wp-content/debug.log
+
+# Node modules
+node_modules/
+
+# Really Simple SSL disabled
+app/wp-content/plugins/really-simple-ssl_disabled/

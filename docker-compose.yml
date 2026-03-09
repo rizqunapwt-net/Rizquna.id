@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mariadb:latest
+    container_name: rizquna_db
+    restart: always
+    command: >
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=200 --max_allowed_packet=64M --innodb_buffer_pool_size=512M
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: u9443309_wp827
+      MYSQL_USER: u9443309_wp827
+      MYSQL_PASSWORD: wordpress_password
+      MARIADB_AUTO_UPGRADE: "1"
+      TZ: UTC
+    ports:
+      - "33068:3306"
+    volumes:
+      - ./data/db:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+      - ./data/uploads:/var/www/html/wp-content/uploads
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 20s
+      retries: 15
+      start_period: 300s
+
+  app:
+    build: .
+    container_name: rizquna_app
+    restart: always
+    ports:
+      - "8088:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./data/uploads:/var/www/html/wp-content/uploads
+    environment:
+      DB_HOST: db
+      DB_USER: u9443309_wp827
+      DB_PASSWORD: wordpress_password
+      DB_NAME: u9443309_wp827
+      TZ: UTC
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/wp-login.php" ]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  db_data:
